@@ -9,6 +9,7 @@ PILHA: Guarda o elemento do topo e um inteiro que conta o numero de elementos.
 NO: Guarda um tipo t_chave e um endereço para outro NO.
 
 AS FUNÇÕES:
+
 init_pilha(pilha** p) // inicia a pilha cujo ponteiro está apontando (IMPORTANTE NÃO ESQUECER DE INICIAR PILHA!)
 
 init_no(no** n, t_chave c) // inicia o no cujo ponteiro está apontando com o valor t_chave c (IMPORTANTE NÃO ESQUECER DE INICIAR oO NO!)
