@@ -27,7 +27,7 @@ void init_no(no** n, t_chave c){
 //a função esta_vazia retorna 0 se está vazia e 1 se diferente
 int esta_vazia(pilha* p){
 	if(p->topo == NULL)return 0;
-	else return 22;
+	else return 1;
 }
 //adiciona elemento na pilha
 void add_elem(pilha* p, no* n){
