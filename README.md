@@ -5,6 +5,7 @@ A maneira mais simples de usar a minha implementação de pilha é simplesmente 
 
 QUAIS SÃO OS TIPOS:
 PILHA: Guarda o elemento do topo e um inteiro que conta o numero de elementos.
+
 NO: Guarda um tipo t_chave e um endereço para outro NO.
 
 AS FUNÇÕES:
