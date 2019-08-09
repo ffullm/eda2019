@@ -40,6 +40,7 @@ t_chave rem_elem(pilha* p){
 	if(esta_vazia(p) == 0)return 1;
 	else{
 	no* aux;
+	aux = p->topo;
 	p->topo = aux->prox;
 	aux->prox = NULL;
 	p->cont -= 1;
