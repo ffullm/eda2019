@@ -7,7 +7,7 @@ QUAIS SÃO OS TIPOS:
 PILHA: Guarda o elemento do topo e um inteiro que conta o numero de elementos.
 
 NO: Guarda um tipo t_chave e um endereço para outro NO.
-
+DESATUALIZADO MAIS TARDE EU TERMINO DE ARRUMAR TUDO
 AS FUNÇÕES:
 
 init_pilha(pilha** p) // inicia a pilha cujo ponteiro está apontando (IMPORTANTE NÃO ESQUECER DE INICIAR PILHA!)
