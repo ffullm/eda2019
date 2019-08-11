@@ -1,54 +1,88 @@
 #include <stdlib.h>
 #include <stdio.h>
-typedef int t_chave;
-//implementação de pilha
+#include <string.h>
+#define MOD %
+//implementação de guiche
 struct s_no{
-	t_chave chave; //valor da chave do no
-	struct s_no* prox; 
+ 	int cpfc;
+	char op;
+	int valor;
+	int cpft;
+	struct s_no* prox;
 };
 typedef struct s_no no;
-struct s_pilha{
+struct s_guiche{
 	no* topo; //topo da lista
-	int cont; //contador
+	int cont;
 };
-typedef struct s_pilha pilha;
-//definindo as funções
-//NAO USAR UMA PILHA SEM INICIAR ANTES
-void init_pilha(pilha** p){
-	*p = (pilha*)malloc(sizeof(pilha)); 
-	(*p)->topo = NULL; 
-	(*p)->cont = 0;
+typedef struct s_guiche guiche;
+no* init_no(int v_cpfc, int v_cpft, char v_op, int v_valor){
+	no* n;
+	n = (no*)malloc(sizeof(no));
+ 	n->cpfc = v_cpfc;
+  	n->op = v_op;
+  	n->valor = v_valor;
+  	n->cpft = v_cpft;
+	return n;
 }
-//NAO USAR UM NO SEM INICIAR ANTES
-void init_no(no** n, t_chave c){
-	*n = (no*)malloc(sizeof(no));
-	(*n)->chave = c;
+void init_arr_guiche(guiche*** p, int k){
+	*p = (guiche**)malloc(sizeof(guiche*)*k);
+  	for (int i = 0; i<k; i++){
+    	(*p)[i] = (guiche*)malloc(sizeof(guiche));
+    	(*p)[i]->topo = NULL;
+    	(*p)[i]->cont = 0;
+  }
 }
-//a função esta_vazia retorna 0 se está vazia e 1 se diferente
-int esta_vazia(pilha* p){
+int esta_vazia(guiche* p){
 	if(p->topo == NULL)return 0;
 	else return 1;
 }
-//adiciona elemento na pilha
-void add_elem(pilha* p, no* n){
-	n->prox = p->topo;
+
+void add_no(guiche* p, no* n) {
+  	n->prox = p->topo;
 	p->topo = n;
 	p->cont += 1;
 }
-//remove elemento da pilha. se a função falhar, ela retorná 1, caso contrário ela retornará o elemento apagado.
-t_chave rem_elem(pilha* p){
-	if(esta_vazia(p) == 0)return 1;
+no* rem_no(guiche* p){
+	if(esta_vazia(p) == 0)return NULL;
 	else{
 	no* aux;
 	aux = p->topo;
 	p->topo = aux->prox;
 	aux->prox = NULL;
 	p->cont -= 1;
-	return aux->chave;
+	return aux;
+  }
+}
+int del_guiche(guiche* p){
+	if (esta_vazia(p) == 0)return 1;
+	else{
+		int n_no = p->cont;
+		for (int i = 0; i<n_no; i++){
+			no* aux = rem_no(p);
+			free(aux);
+		}
+		return 0;			
 	}
 }
-//retorna o valor do topo da pilha
-t_chave topo(pilha* p){
-	if (esta_vazia(p) == 0)return 1;
-	else return (p->topo)->chave;
+
+int main(){
+  int n;
+  scanf("%d", &n);
+  for (int i = 0; i<n; i++){
+	int n_guiches = 3;
+    	int nGuiche = i MOD n_guiches;
+    	guiche** p;
+    	init_arr_guiche(&p, n_guiches);
+    	int v_cpfc, v_cpft, v_valor;
+    	char v_op;
+    	scanf("%d%d %c%d", &v_cpfc, &v_cpft, &v_op, &v_valor);
+    	add_no(p[nGuiche], init_no(v_cpfc, v_cpft, v_op, v_valor));
+  }
+  printf("“-:| RELATÓRIO PARCIAL |:-\n");
+  printf("%d", n_guiches);
+  for (int i =0; i<3; i++){
+	
+  	for 
+  }
 }
