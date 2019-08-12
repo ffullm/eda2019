@@ -62,7 +62,8 @@ int del_guiche(guiche* p){
 			no* aux = rem_no(p);
 			free(aux);
 		}
-		return 0;			
+		free(p);
+		return 0;		
 	}
 }
 
@@ -80,13 +81,15 @@ int main(){
     	add_no(p[nGuiche], init_no(v_cpfc, v_cpft, v_op, v_valor));
   }
   printf("-:| RELATÓRIO PARCIAL |:-\n");
+  printf("%d\n", n_guiche);
   for (int i =0; i<n_guiche; i++){
   	int l_pcont = p[i]->cont;
-	printf("%d\n", l_pcont);
+	printf("Guiche: %d\n", i+1);
   	for (int q = 0; q<l_pcont; q++){
 		no* n_atual =  rem_no(p[i]);
 		printf("%d %d %c %d\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
 	}
-      	del_guiche(p[i]);	
+      	del_guiche(p[i]);
   }
+  free(p);
 }
