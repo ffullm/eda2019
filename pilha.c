@@ -28,9 +28,9 @@ no* init_no(int v_cpfc, int v_cpft, char v_op, int v_valor){
 void init_arr_guiche(guiche*** p, int k){
 	*p = (guiche**)malloc(sizeof(guiche*)*k);
   	for (int i = 0; i<k; i++){
-    	(*p)[i] = (guiche*)malloc(sizeof(guiche));
-    	(*p)[i]->topo = NULL;
-    	(*p)[i]->cont = 0;
+    		(*p)[i] = (guiche*)malloc(sizeof(guiche));
+    		(*p)[i]->topo = NULL;
+    		(*p)[i]->cont = 0;
   }
 }
 int esta_vazia(guiche* p){
@@ -69,20 +69,24 @@ int del_guiche(guiche* p){
 int main(){
   int n;
   scanf("%d", &n);
+  int n_guiche = 3;
+  guiche** p;
+  init_arr_guiche(&p, n_guiche);
   for (int i = 0; i<n; i++){
-	int n_guiches = 3;
-    	int nGuiche = i MOD n_guiches;
-    	guiche** p;
-    	init_arr_guiche(&p, n_guiches);
+  	int nGuiche = i MOD n_guiche;
     	int v_cpfc, v_cpft, v_valor;
     	char v_op;
     	scanf("%d%d %c%d", &v_cpfc, &v_cpft, &v_op, &v_valor);
     	add_no(p[nGuiche], init_no(v_cpfc, v_cpft, v_op, v_valor));
   }
-  printf("“-:| RELATÓRIO PARCIAL |:-\n");
-  printf("%d", n_guiches);
-  for (int i =0; i<3; i++){
-	
-  	for 
+  printf("-:| RELATÓRIO PARCIAL |:-\n");
+  for (int i =0; i<n_guiche; i++){
+  	int l_pcont = p[i]->cont;
+	printf("%d\n", l_pcont);
+  	for (int q = 0; q<l_pcont; q++){
+		no* n_atual =  rem_no(p[i]);
+		printf("%d %d %c %d\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
+	}
+      	del_guiche(p[i]);	
   }
 }
