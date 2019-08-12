@@ -88,8 +88,9 @@ int main(){
   	for (int q = 0; q<l_pcont; q++){
 		no* n_atual =  rem_no(p[i]);
 		printf("%d %d %c %d\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
+		free(n_atual);
 	}
-      	del_guiche(p[i]);
+      	free(p[i]);
   }
   free(p);
 }
