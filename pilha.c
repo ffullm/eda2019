@@ -25,13 +25,14 @@ no* init_no(int v_cpfc, int v_cpft, char v_op, int v_valor){
   	n->cpft = v_cpft;
 	return n;
 }
-void init_arr_guiche(guiche*** p, int k){
-	*p = (guiche**)malloc(sizeof(guiche*)*k);
+guiche** init_arr_guiche(int k){
+	guiche** p = (guiche**)malloc(sizeof(guiche*)*k);
   	for (int i = 0; i<k; i++){
-    		(*p)[i] = (guiche*)malloc(sizeof(guiche));
-    		(*p)[i]->topo = NULL;
-    		(*p)[i]->cont = 0;
-  }
+    		p[i] = (guiche*)malloc(sizeof(guiche));
+    		p[i]->topo = NULL;
+    		p[i]->cont = 0;
+   	}
+	return p;
 }
 int esta_vazia(guiche* p){
 	if(p->topo == NULL)return 0;
@@ -59,8 +60,7 @@ int del_guiche(guiche* p){
 	else{
 		int n_no = p->cont;
 		for (int i = 0; i<n_no; i++){
-			no* aux = rem_no(p);
-			free(aux);
+				free(rem_no(p));
 		}
 		free(p);
 		return 0;		
@@ -72,7 +72,7 @@ int main(){
   scanf("%d", &n);
   int n_guiche = 3;
   guiche** p;
-  init_arr_guiche(&p, n_guiche);
+  p = init_arr_guiche(n_guiche);
   for (int i = 0; i<n; i++){
   	int nGuiche = i MOD n_guiche;
     	int v_cpfc, v_cpft, v_valor;
@@ -85,12 +85,13 @@ int main(){
   for (int i =0; i<n_guiche; i++){
   	int l_pcont = p[i]->cont;
 	printf("Guiche: %d\n", i+1);
+	no* aux = p[i]->topo;
   	for (int q = 0; q<l_pcont; q++){
-		no* n_atual =  rem_no(p[i]);
+		no* n_atual = aux;
 		printf("%d %d %c %d\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
-		free(n_atual);
+		aux = n_atual->prox;
 	}
-      	free(p[i]);
+      	del_guiche(p[i]);
   }
   free(p);
 }
