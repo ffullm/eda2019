@@ -2,12 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 #define MOD %
+typedef long long unsigned luint;
 //implementação de guiche
 struct s_no{
- 	int cpfc;
+ 	luint cpfc;
 	char op;
 	int valor;
-	int cpft;
+	luint cpft;
 	struct s_no* prox;
 };
 typedef struct s_no no;
@@ -16,7 +17,7 @@ struct s_guiche{
 	int cont;
 };
 typedef struct s_guiche guiche;
-no* init_no(int v_cpfc, int v_cpft, char v_op, int v_valor){
+no* init_no(luint v_cpfc, luint v_cpft, char v_op, int v_valor){
 	no* n;
 	n = (no*)malloc(sizeof(no));
  	n->cpfc = v_cpfc;
@@ -75,20 +76,21 @@ int main(){
   p = init_arr_guiche(n_guiche);
   for (int i = 0; i<n; i++){
   	int nGuiche = i MOD n_guiche;
-    	int v_cpfc, v_cpft, v_valor;
+    	luint v_cpfc, v_cpft;
+	int v_valor;
     	char v_op;
-    	scanf("%d%d %c%d", &v_cpfc, &v_cpft, &v_op, &v_valor);
+    	scanf("%llu %llu %c %d", &v_cpfc, &v_cpft, &v_op, &v_valor);
     	add_no(p[nGuiche], init_no(v_cpfc, v_cpft, v_op, v_valor));
   }
   printf("-:| RELATÓRIO PARCIAL |:-\n");
   printf("%d\n", n_guiche);
   for (int i =0; i<n_guiche; i++){
   	int l_pcont = p[i]->cont;
-	printf("Guiche: %d\n", i+1);
+	printf("Guiche %d:  %d\n", i+1, l_pcont);
 	no* aux = p[i]->topo;
   	for (int q = 0; q<l_pcont; q++){
 		no* n_atual = aux;
-		printf("%d %d %c %d\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
+		printf("[%llu, %llu, %c, %d]\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
 		aux = n_atual->prox;
 	}
       	del_guiche(p[i]);
