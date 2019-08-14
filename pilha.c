@@ -86,7 +86,7 @@ int main(){
   printf("%d\n", n_guiche);
   for (int i =0; i<n_guiche; i++){
   	int l_pcont = p[i]->cont;
-	printf("Guiche %d:  %d\n", i+1, l_pcont);
+	printf("Guiche %d: %d\n", i+1, l_pcont);
 	no* aux = p[i]->topo;
   	for (int q = 0; q<l_pcont; q++){
 		no* n_atual = aux;
