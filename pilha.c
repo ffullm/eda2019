@@ -3,7 +3,22 @@
 #include <string.h>
 #define MOD %
 typedef long long unsigned luint;
-//implementação de pilha
+typedef struct s_no_lista{
+	luint cpf;
+	luint valor;
+	luint n_op;
+	struct s_no_lista *prox;
+}no_lista;
+
+no_lista *init_no_lista(luint v_cpf){
+	no_lista *n;
+	n = (no_lista*)malloc(sizeof(no_lista));
+ 	n->cpf = v_cpf;
+  	n->valor=0;
+  	n->n_op=1;
+	return n;
+}
+//PILHA 
 struct s_no{
  	luint cpfc;
 	char op;
@@ -52,7 +67,7 @@ no* busca_pilha(pilha* p, luint cpf){
 	while(aux->cpfc!=cpf&&aux!=NULL){
 		aux=aux->prox;
 	}
-	return aux;	
+	return aux;
 }
 no* rem_no_pilha(pilha* p){
 	if(esta_vazia(p) == 0)return NULL;
@@ -73,28 +88,28 @@ int del_pilha(pilha* p){
 				free(rem_no_pilha(p));
 		}
 		free(p);
-		return 0;		
+		return 0;
 	}
 }
 
 //////////////////////////////////////////////////////////////////FILA//
 typedef struct s_lista{
-	no* primeiro;	
-	
+	no_lista* primeiro;
+
 }lista;
 
 int lista_vazia(lista* l){
 	return (l->primeiro==NULL);
 }
 
-lista* criar_lista(int k){
-	lista* l = (lista*)malloc(sizeof(lista)*k);
+lista* criar_lista(){
+	lista* l=(lista*)malloc(sizeof(lista));
 	l=(lista*)malloc(sizeof(lista));
 	l->primeiro=NULL;
 	return l;
 }
 
-int inserir_no_lista(lista *l, int pos, no *n){
+int inserir_no_lista(lista *l, int pos, no_lista *n){
 	if(lista_vazia(l)|| pos==1){
 		n->prox=l->primeiro;
 		l->primeiro=n;
@@ -102,7 +117,7 @@ int inserir_no_lista(lista *l, int pos, no *n){
 	}
 	else{
 		int i=1;
-		no* aux=l->primeiro;
+		no_lista* aux=l->primeiro;
 		while(i!=pos+1 && aux->prox!=NULL){
 			aux=aux->prox;
 			i++;
@@ -113,14 +128,14 @@ int inserir_no_lista(lista *l, int pos, no *n){
 	return 0;
 }
 
-no* remover_no_lista(lista *l, no *n){
+no_lista* remover_no_lista(lista *l, no_lista *n){
 	if(lista_vazia(l))return NULL;
 	if(l->primeiro==n){
 		l->primeiro=l->primeiro->prox;
 		return 0;
 	}
 	else{
-		no* aux=l->primeiro;
+		no_lista* aux=l->primeiro;
 		while(aux->prox!=n){
 			aux=aux->prox;
 		}
@@ -129,13 +144,14 @@ no* remover_no_lista(lista *l, no *n){
 		return n;
 	}
 }
-no* buscar_lista(lista *l, luint cpf){
-	no *aux=l->primeiro;
-	while(aux->cpfc!=cpf&&aux!=NULL){
+no_lista* buscar_lista(lista *l, luint cpf){
+	no_lista *aux=l->primeiro;
+	while(aux->cpf!=cpf&&aux!=NULL){
 		aux=aux->prox;
 	}
 	return aux;
-} 
+}
+
 int del_lista(lista *l){
 	if(lista_vazia(l))return 1;
 	while(!lista_vazia(l)){
@@ -150,7 +166,7 @@ typedef struct s_fila{
        	luint inicio;
 	luint fim;
 	luint tam;
-	luint qntelem;	
+	luint qntelem;
 }fila;
 
 fila* criar_fila(luint tam){
@@ -223,13 +239,56 @@ no* entradas(){
 	return no;
 }
 
-int processar_dados(fila* f, int n_clientes){
+void relatorio_final(lista *l){
+	luint i=0;
+	no_lista *aux=l->primeiro;
+	while(aux!=NULL){i++; aux=aux->prox;}
+	printf("-:| RELATÓRIO FINAL |:-\n%llu\n", i);
+	aux=l->primeiro;
+	while(aux!=NULL){
+		printf("-:[ %llu: %llu %llu\n", aux->cpf, aux->n_op, aux->valor);
+		aux=aux->prox;
+	}
+}
+
+no_lista* proc_no_lista(lista *l, luint cpf){
+	if(buscar_lista(l, cpf)!=NULL){//BUSCAR O CPF PRA DEPOSITAR
+		no_lista *noaux = buscar_lista(l, cpf);
+		noaux->n_op++;
+		return noaux; 
+	}
+ 	else{
+		no_lista *noaux;
+		noaux = init_no_lista(cpf);
+		luint i=1;
+		no_lista* auxl = l->primeiro;//auxliar pra percorrer a lista
+		while(auxl!=NULL&&cpf<auxl->cpf){//Percorre a lista até achar cpf maior que o cpf do no
+			auxl=auxl->prox;
+			i++;
+		}
+		inserir_no_lista(l, i, noaux);
+		return noaux;
+        }
+}
+
+void processar_dados(fila *f, luint n_clientes, lista *l){
 	for(luint i=0; i<n_clientes; i++){
-		no* no=desenfileirar_no(f);
-		switch(no->op):
-			case('D'){
-				if(
+		no* no=desinfileira_no(f);
+		switch(no->op){
+			case('D'):{
+				proc_no_lista(l, no->cpft)->valor+=no->valor;
+				break;
 			}
+			case('S'):{
+				proc_no_lista(l, no->cpfc)->valor-=no->valor;
+				break;
+			}
+			case('T'):{
+				proc_no_lista(l, no->cpfc)->valor-=no->valor;
+				proc_no_lista(l, no->cpft)->valor+=no->valor;
+				break;
+			}
+		}
 	}
 }
 
@@ -240,6 +299,7 @@ int main(){
   pilha** p;
   p = init_arr_pilha(n_pilhas);
   fila* f = criar_fila(n_clientes);
+  lista *l = criar_lista();
   for(luint i=0; i<n_clientes; i++){
 	  int nGuiche = i MOD n_pilhas;
 	  no* no=entradas(i, n_pilhas);
@@ -247,5 +307,12 @@ int main(){
 	  add_no_pilha(p[nGuiche], no);
   }
   relatorio_parcial(p, n_pilhas);
-
+  processar_dados(f, n_clientes, l);
+  relatorio_final(l);
+  for(int l=0; l<n_pilhas; l++){
+  	del_pilha(p[l]);
+  }
+  free(p);
+  del_lista(l);
+  del_fila(f);
 }
