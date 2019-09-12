@@ -22,7 +22,7 @@ no_lista *add_no_lista(lista *l, luint pos, no_lista *n){
 	else{
 		luint i=1;
 		no_lista* aux=l->primeiro;
-		while(i!=pos+1 && aux->prox!=NULL){
+		while(i!=pos-1 && aux->prox!=NULL){
 			aux=aux->prox;
 			i++;
 		}
@@ -58,7 +58,7 @@ no_lista *buscar_lista(lista *l, luint cpf){
 }
 
 int del_lista(lista *l){
-	while(!lista_vazia(l)){
+	while(l->primeiro!=NULL){
 		free(rem_no_lista(l, l->primeiro));
 	}
 	free(l);

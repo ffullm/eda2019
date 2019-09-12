@@ -42,7 +42,7 @@ no_padrao *rem_no_pilha(pilha* p){
 }
 
 int del_pilha(pilha* p){		
-	while(!pilha_vazia(p)){
+	while(p->topo!=NULL){
 		free(rem_no_pilha(p));
 	}	
 	free(p);

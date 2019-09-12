@@ -58,17 +58,12 @@ no_lista *proc_no_lista(lista *l, luint cpf){
 		no_lista *noaux = iniciar_no_lista(cpf);
 		no_lista* auxl = l->primeiro;//auxliar pra percorrer a lista
 		luint i=1;
-		while(auxl!=NULL&&cpf<auxl->cpf){//Percorre a lista até achar cpf maior que o cpf do no
+			while(auxl!=NULL&&cpf>auxl->cpf){//Percorre a lista até achar cpf maior que o cpf do no
 			auxl=auxl->prox;
 			i++;
 		}
 		add_no_lista(l, i, noaux);
-		printf("INICIO DA LISTA\n\n");
-		while(auxl!=NULL){	
-			printf("CPF: %llu\n", auxl->cpf);
-			auxl=auxl->prox;
-		}
-		printf("FIM DA LISTA\n\n");
+		auxl = l->primeiro;
 		return noaux;
         }
 }
@@ -86,8 +81,11 @@ void processar_dados(fila *f, luint n_clientes, lista *l){
 				break;
 			}
 			case('T'):{
-				proc_no_lista(l, no->cpfc)->valor-=no->valor;
-				proc_no_lista(l, no->cpft)->valor+=no->valor;
+				if(proc_no_lista(l, no->cpfc)->valor<no->valor)continue;
+				else{
+					proc_no_lista(l, no->cpfc)->valor-=no->valor;
+					proc_no_lista(l, no->cpft)->valor+=no->valor;
+				}
 				break;
 			}
 		}

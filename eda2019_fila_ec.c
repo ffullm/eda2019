@@ -41,6 +41,7 @@ no_padrao *rem_no_fila(fila *f){
 }
 
 int del_fila(fila *f){
+	free(f->valores);
 	free(f);
 	return 1;
 }
