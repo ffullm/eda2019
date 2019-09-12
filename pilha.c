@@ -3,21 +3,21 @@
 #include <string.h>
 #define MOD %
 typedef long long unsigned luint;
-//implementação de guiche
+//implementação de pilha
 struct s_no{
  	luint cpfc;
 	char op;
-	int valor;
+	luint valor;
 	luint cpft;
 	struct s_no* prox;
 };
 typedef struct s_no no;
-struct s_guiche{
+struct s_pilha{
 	no* topo; //topo da lista
 	int cont;
 };
-typedef struct s_guiche guiche;
-no* init_no(luint v_cpfc, luint v_cpft, char v_op, int v_valor){
+typedef struct s_pilha pilha;
+no* init_no(luint v_cpfc, luint v_cpft, char v_op, luint v_valor){
 	no* n;
 	n = (no*)malloc(sizeof(no));
  	n->cpfc = v_cpfc;
@@ -26,74 +26,226 @@ no* init_no(luint v_cpfc, luint v_cpft, char v_op, int v_valor){
   	n->cpft = v_cpft;
 	return n;
 }
-guiche** init_arr_guiche(int k){
-	guiche** p = (guiche**)malloc(sizeof(guiche*)*k);
+pilha** init_arr_pilha(int k){
+	pilha** p = (pilha**)malloc(sizeof(pilha*)*k);
   	for (int i = 0; i<k; i++){
-    		p[i] = (guiche*)malloc(sizeof(guiche));
+    		p[i] = (pilha*)malloc(sizeof(pilha));
     		p[i]->topo = NULL;
     		p[i]->cont = 0;
    	}
 	return p;
 }
-int esta_vazia(guiche* p){
+int esta_vazia(pilha* p){
 	if(p->topo == NULL)return 0;
 	else return 1;
 }
 
-void add_no(guiche* p, no* n) {
+int add_no_pilha(pilha* p, no* n) {
   	n->prox = p->topo;
 	p->topo = n;
 	p->cont += 1;
+	return 1;
 }
-no* rem_no(guiche* p){
+
+no* busca_pilha(pilha* p, luint cpf){
+	no* aux=p->topo;
+	while(aux->cpfc!=cpf&&aux!=NULL){
+		aux=aux->prox;
+	}
+	return aux;	
+}
+no* rem_no_pilha(pilha* p){
 	if(esta_vazia(p) == 0)return NULL;
 	else{
-	no* aux;
-	aux = p->topo;
-	p->topo = aux->prox;
-	aux->prox = NULL;
-	p->cont -= 1;
-	return aux;
+		no* aux;
+		aux = p->topo;
+		p->topo = aux->prox;
+		aux->prox = NULL;
+		p->cont -= 1;
+		return aux;
   }
 }
-int del_guiche(guiche* p){
+int del_pilha(pilha* p){
 	if (esta_vazia(p) == 0)return 1;
 	else{
 		int n_no = p->cont;
 		for (int i = 0; i<n_no; i++){
-				free(rem_no(p));
+				free(rem_no_pilha(p));
 		}
 		free(p);
 		return 0;		
 	}
 }
 
-int main(){
-  int n;
-  scanf("%d", &n);
-  int n_guiche = 3;
-  guiche** p;
-  p = init_arr_guiche(n_guiche);
-  for (int i = 0; i<n; i++){
-  	int nGuiche = i MOD n_guiche;
-    	luint v_cpfc, v_cpft;
-	int v_valor;
-    	char v_op;
-    	scanf("%llu %llu %c %d", &v_cpfc, &v_cpft, &v_op, &v_valor);
-    	add_no(p[nGuiche], init_no(v_cpfc, v_cpft, v_op, v_valor));
-  }
+//////////////////////////////////////////////////////////////////FILA//
+typedef struct s_lista{
+	no* primeiro;	
+	
+}lista;
+
+int lista_vazia(lista* l){
+	return (l->primeiro==NULL);
+}
+
+lista* criar_lista(int k){
+	lista* l = (lista*)malloc(sizeof(lista)*k);
+	l=(lista*)malloc(sizeof(lista));
+	l->primeiro=NULL;
+	return l;
+}
+
+int inserir_no_lista(lista *l, int pos, no *n){
+	if(lista_vazia(l)|| pos==1){
+		n->prox=l->primeiro;
+		l->primeiro=n;
+		return 0;
+	}
+	else{
+		int i=1;
+		no* aux=l->primeiro;
+		while(i!=pos+1 && aux->prox!=NULL){
+			aux=aux->prox;
+			i++;
+		}
+		n->prox=aux->prox;
+		aux->prox=n;
+	}
+	return 0;
+}
+
+no* remover_no_lista(lista *l, no *n){
+	if(lista_vazia(l))return NULL;
+	if(l->primeiro==n){
+		l->primeiro=l->primeiro->prox;
+		return 0;
+	}
+	else{
+		no* aux=l->primeiro;
+		while(aux->prox!=n){
+			aux=aux->prox;
+		}
+		aux->prox=n->prox;
+		n->prox=NULL;
+		return n;
+	}
+}
+no* buscar_lista(lista *l, luint cpf){
+	no *aux=l->primeiro;
+	while(aux->cpfc!=cpf&&aux!=NULL){
+		aux=aux->prox;
+	}
+	return aux;
+} 
+int del_lista(lista *l){
+	if(lista_vazia(l))return 1;
+	while(!lista_vazia(l)){
+		free(remover_no_lista(l, l->primeiro));
+	}
+	free(l);
+	return 0;
+}
+/////////////////////////////////////////////////////////////FILA ESTATICA
+typedef struct s_fila{
+	no** valores;
+       	luint inicio;
+	luint fim;
+	luint tam;
+	luint qntelem;	
+}fila;
+
+fila* criar_fila(luint tam){
+	fila* f;
+	f=(fila*)malloc(sizeof(fila));
+	f->tam=tam;
+	f->inicio=0;
+	f->fim=0;
+	f->qntelem=0;
+	f->valores=(no**)malloc(sizeof(no*)*tam);
+	return f;
+}
+
+int fila_vazia(fila *f){
+	return (f->qntelem==0);
+}
+
+int fila_cheia(fila *f){
+	return (f->tam==f->qntelem);
+}
+
+int enfileira_no(fila *f, no* n){
+	if(fila_cheia(f))return 1;
+	else{
+		f->fim=(f->fim+1)%f->tam;
+		f->valores[f->fim]=n;
+		f->qntelem++;
+		return 0;
+	}
+}
+
+no* desinfileira_no(fila *f){
+	if(fila_vazia(f))return NULL;
+	else{
+		luint x=f->inicio;
+		f->qntelem--;
+		f->inicio=(f->inicio+1)%f->tam;
+		return f->valores[x];
+	}
+}
+
+int del_fila(fila *f){
+	free(f);
+	return 0;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void relatorio_parcial(pilha **p, int n_pilhas){
   printf("-:| RELATÓRIO PARCIAL |:-\n");
-  printf("%d\n", n_guiche);
-  for (int i =0; i<n_guiche; i++){
+  printf("%d\n", n_pilhas);
+  for (int i =0; i<n_pilhas; i++){
   	int l_pcont = p[i]->cont;
 	printf("Guiche %d: %d\n", i+1, l_pcont);
 	no* aux = p[i]->topo;
   	for (int q = 0; q<l_pcont; q++){
 		no* n_atual = aux;
-		printf("[%llu, %llu, %c, %d]\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
-		aux = n_atual->prox;
+		if(n_atual->op!='S')printf("[%llu, %llu, %c, %llu]\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
+		else printf("[%llu, %c, %llu]\n", n_atual->cpfc, n_atual->op, n_atual->valor);
+	aux = n_atual->prox;
 	}
-      	del_guiche(p[i]);
   }
-  free(p);
+}
+
+no* entradas(){
+    	luint v_cpfc, v_cpft,v_valor;
+    	char v_op;
+    	scanf("%llu %llu %c %llu", &v_cpfc, &v_cpft, &v_op, &v_valor);
+	no* no = init_no(v_cpfc, v_cpft, v_op, v_valor);
+	return no;
+}
+
+int processar_dados(fila* f, int n_clientes){
+	for(luint i=0; i<n_clientes; i++){
+		no* no=desenfileirar_no(f);
+		switch(no->op):
+			case('D'){
+				if(
+			}
+	}
+}
+
+int main(){
+  luint n_clientes;
+  int n_pilhas=3;
+  scanf("%llu", &n_clientes);
+  pilha** p;
+  p = init_arr_pilha(n_pilhas);
+  fila* f = criar_fila(n_clientes);
+  for(luint i=0; i<n_clientes; i++){
+	  int nGuiche = i MOD n_pilhas;
+	  no* no=entradas(i, n_pilhas);
+	  enfileira_no(f, no);
+	  add_no_pilha(p[nGuiche], no);
+  }
+  relatorio_parcial(p, n_pilhas);
+
 }
