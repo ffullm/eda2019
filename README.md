@@ -1,4 +1,4 @@
-typedef long long unsigned luint - TIPO DOS VALORES
+typedef long long unsigned luint - TIPO DOS CPF
 
 
 typedef signed long long int lint - TIPO DOS VALORES POSSIVEIS A CADA CPF
