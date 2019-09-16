@@ -21,8 +21,7 @@ void relatorio_parcial(pilha **p, int n_pilhas){
 	aux = p[i]->topo;
   	for (luint q = 0; q<l_pcont; q++){
 		no_padrao *n_atual = aux;
-		if(n_atual->op!='S')printf("[%llu, %llu, %c, %lld]\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
-		else printf("[%llu, %c, %lld]\n", n_atual->cpfc, n_atual->op, n_atual->valor);
+		printf("[%llu,%llu,%c,%lld]\n", n_atual->cpfc, n_atual->cpft, n_atual->op, n_atual->valor);
 		aux = n_atual->prox;
 	}
   }
@@ -39,11 +38,11 @@ no_padrao *entradas(){
 void relatorio_final(lista *l){
 	luint i=0;
 	no_lista *aux=l->primeiro;
-	while(aux!=NULL){i++; aux=aux->prox;}
-	printf("-:| RELATÓRIO FINAL |:-\n%llu\n", i);
+	while(aux!=NULL){if(aux->n_op!=0)i++; aux=aux->prox;}
+	printf("\n-:| RELATÓRIO FINAL |:-\n %llu\n", i);
 	aux=l->primeiro;
 	while(aux!=NULL){	
-		if(aux->n_op!=0)printf("-:[ %llu: %llu %lld\n", aux->cpf, aux->n_op, aux->valor);
+		if(aux->n_op!=0)printf("-:[ %llu : %llu %lld\n", aux->cpf, aux->n_op, aux->valor);
 		aux=aux->prox;
 	}
 }
@@ -72,31 +71,23 @@ void processar_dados(fila *f, luint n_clientes, lista *l){
 		no_padrao *no=rem_no_fila(f);
 		switch(no->op){
 			case('D'):{
-				if(no->valor==0)break;
-				else{
-					no_lista *auxnol=proc_no_lista(l, no->cpft);
-					auxnol->valor+=no->valor;
-					auxnol->n_op++;
-				}
+				no_lista *auxnol=proc_no_lista(l, no->cpft);
+				auxnol->valor+=no->valor;
+				auxnol->n_op++;
+				proc_no_lista(l, no->cpfc)->n_op++;
 				break;
 			}
 			case('S'):{
 				no_lista *auxnol=proc_no_lista(l, no->cpfc);
-				if(no->valor==0||auxnol->valor<no->valor)break;
-				else{
-					auxnol->valor-=no->valor;
-					auxnol->n_op++;
-				}
+				auxnol->valor-=no->valor;
+				auxnol->n_op++;
 				break;
 			}
 			case('T'):{
-				if(proc_no_lista(l, no->cpfc)->valor<no->valor)continue;
-				else{
-					proc_no_lista(l, no->cpfc)->valor-=no->valor;
-					proc_no_lista(l, no->cpft)->valor+=no->valor;
-					proc_no_lista(l, no->cpfc)->n_op++;
-					proc_no_lista(l, no->cpft)->n_op++;
-				}
+				proc_no_lista(l, no->cpfc)->valor-=no->valor;
+				proc_no_lista(l, no->cpft)->valor+=no->valor;
+				proc_no_lista(l, no->cpfc)->n_op++;
+				proc_no_lista(l, no->cpft)->n_op++;
 				break;
 			}
 		}
